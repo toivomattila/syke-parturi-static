@@ -1,4 +1,5 @@
 offline = true
 exclude = ["^https://www.google.com/maps/dir/", "^tel:"]
-accept = ["200..=299", "3xx"]
+accept = ["200..=299"]
 no_progress = true
+root_dir = "dist"
