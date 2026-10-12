@@ -13,13 +13,23 @@ export const business = {
     international: "+358503803388",
   },
   businessId: "3593342-5",
-  openingHours: "Aukioloajat: soita ja kysy",
+  openingHours: [
+    {
+      days: "Ma–Pe",
+      schemaDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "10:00",
+      closes: "19:00",
+    },
+    { days: "La", schemaDays: ["Saturday"], opens: "10:00", closes: "18:00" },
+  ],
   directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=Kauppakatu+18%2C+15140+Lahti",
   services: [
     { name: "Hiustenleikkuu", price: 20, currency: "EUR" },
     { name: "Parranajo / parran muotoilu", price: 15, currency: "EUR" },
   ],
 } as const;
+
+export const openingHoursText = `Aukioloajat: ${business.openingHours.map((hours) => `${hours.days} ${hours.opens.slice(0, 5)}–${hours.closes.slice(0, 5)}`).join(", ")}, Su suljettu`;
 
 export const webmcpTools = [
   {
@@ -30,6 +40,11 @@ export const webmcpTools = [
   {
     name: "get_location_and_contact",
     description: "Hakee Syke Parturin osoitteen, puhelinnumeron, Y-tunnuksen ja aukioloaikatiedon.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+  },
+  {
+    name: "get_opening_hours",
+    description: "Hakee Syke Parturin aukioloajat.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
@@ -55,6 +70,7 @@ export const aiCatalog = {
       representativeQueries: [
         `Mitkä ovat ${business.name} palvelut ja hinnat?`,
         `Missä ${business.name} sijaitsee ja miten sinne saa reittiohjeet?`,
+        `Mitkä ovat ${business.name} aukioloajat?`,
       ],
       metadata: {
         webmcpManifestUrl: new URL("/.well-known/webmcp.json", business.url).href,

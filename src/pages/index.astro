@@ -4,7 +4,7 @@ import Button from '../components/ui/Button.astro';
 import Card from '../components/ui/Card.astro';
 import { Image } from 'astro:assets';
 import interior from '../assets/barbershop.png';
-import { business } from '../data/business';
+import { business, openingHoursText } from '../data/business';
 const title = `${business.name} — Parturi Lahdessa`;
 const description = `${business.name} Lahdessa. ${business.services.map((service) => `${service.name} ${service.price} €`).join(' ja ')}. ${business.address.street}, ${business.address.postalCode} ${business.address.locality}.`;
 const offerCatalog = {
@@ -31,6 +31,12 @@ const structuredData = {
   image: 'https://sykeparturi.datato.fi/og-image.png',
   priceRange: `${Math.min(...business.services.map((service) => service.price))} €–${Math.max(...business.services.map((service) => service.price))} €`,
   taxID: business.businessId,
+  openingHoursSpecification: business.openingHours.map((hours) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: hours.schemaDays.map((day) => `https://schema.org/${day}`),
+    opens: hours.opens,
+    closes: hours.closes,
+  })),
   hasOfferCatalog: offerCatalog,
 };
 ---
@@ -65,7 +71,7 @@ const structuredData = {
     </section>
     <section class="contact" id="yhteystiedot" aria-labelledby="contact-title">
       <div class="container contact-grid">
-        <div class="contact-intro"><p class="eyebrow">Tervetuloa</p><h2 id="contact-title">Ota yhteyttä.<br /><span>Tule käymään.</span></h2><p>{business.openingHours}</p></div>
+        <div class="contact-intro"><p class="eyebrow">Tervetuloa</p><h2 id="contact-title">Ota yhteyttä.<br /><span>Tule käymään.</span></h2><p>{openingHoursText}</p></div>
         <div class="contact-details">
           <div class="detail"><span class="detail-label">Osoite</span><address>{business.address.street}<br />{business.address.postalCode} {business.address.locality}</address><a class="detail-link" href={business.directionsUrl} target="_blank" rel="noreferrer">Avaa reittiohjeet <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M15 3h6v6m-11 5L21 3M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg></a></div>
           <div class="detail"><span class="detail-label">Puhelin</span><a class="phone-link" href={business.phone.href}>{business.phone.display}</a><a class="detail-link" href={business.phone.href}>Soita meille <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.58 2.8.7a2 2 0 0 1 1.73 2.03z"/></svg></a></div>

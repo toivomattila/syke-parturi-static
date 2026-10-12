@@ -1,4 +1,4 @@
-import { business, webmcpTools } from "../data/business";
+import { business, openingHoursText, webmcpTools } from "../data/business";
 
 const mc = document.modelContext ?? navigator.modelContext;
 
@@ -13,8 +13,9 @@ if (mc) {
         `${business.address.street}, ${business.address.postalCode} ${business.address.locality}`,
         `Puhelin: ${business.phone.display}`,
         `Y-tunnus: ${business.businessId}`,
-        business.openingHours,
+        openingHoursText,
       ].join("\n"),
+      get_opening_hours: openingHoursText,
       get_directions_link: business.directionsUrl,
     };
 
