@@ -1,0 +1,118 @@
+@import "tailwindcss";
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/manrope";
+
+:root {
+  color-scheme: dark;
+  --ink: #f4f0e8;
+  --muted: #b4b0a7;
+  --green: #132b24;
+  --green-deep: #0b1915;
+  --green-light: #224337;
+  --gold: #d5ac70;
+  --line: rgb(244 240 232 / 14%);
+}
+
+@theme {
+  --font-sans: "DM Sans Variable", sans-serif;
+  --font-display: "Manrope Variable", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--green-deep);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+a {
+  color: inherit;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+}
+::selection {
+  color: var(--green-deep);
+  background: var(--gold);
+}
+.skip-link {
+  position: absolute;
+  z-index: 20;
+  top: 1rem;
+  left: 1rem;
+  transform: translateY(-180%);
+  background: var(--ink);
+  color: var(--green-deep);
+  padding: 0.75rem 1rem;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+.container {
+  width: min(1160px, calc(100% - 3rem));
+  margin-inline: auto;
+}
+.eyebrow {
+  color: var(--gold);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.button {
+  display: inline-flex;
+  min-height: 3.35rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  background: var(--gold);
+  color: #111a15;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.button:hover {
+  background: transparent;
+  color: var(--gold);
+}
+.button-outline {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}
+.button-outline:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+.section {
+  padding-block: 7rem;
+}
+@media (max-width: 640px) {
+  .container {
+    width: min(100% - 2rem, 1160px);
+  }
+  .section {
+    padding-block: 4.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

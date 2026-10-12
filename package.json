@@ -1,0 +1,42 @@
+{
+  "name": "syke-parturi-static",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint --type-aware --tsconfig tsconfig.json",
+    "check": "astro check && tsc --noEmit",
+    "build": "astro build",
+    "assets:generate": "node scripts/generate-assets.mjs",
+    "doctor": "react-doctor . --yes --offline",
+    "lhci": "lhci autorun",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/dm-sans": "^5.2.6",
+    "@fontsource-variable/manrope": "^5.2.6",
+    "@tailwindcss/vite": "^4.1.17",
+    "astro": "^7.3.8",
+    "lucide-static": "^0.468.0",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "^3.6.0",
+    "@lhci/cli": "^0.15.1",
+    "@types/node": "^22.19.0",
+    "oxfmt": "^0.23.0",
+    "oxlint": "^1.27.0",
+    "oxlint-tsgolint": "^7.0.2004",
+    "react-doctor": "^0.9.17",
+    "sharp": "^0.35.5",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.34.6"
+}

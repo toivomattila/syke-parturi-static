@@ -1,0 +1,4 @@
+offline = true
+exclude = ["^https://www.google.com/maps/dir/", "^tel:"]
+accept = ["200..=299", "3xx"]
+no_progress = true

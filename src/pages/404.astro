@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+const title = 'Sivua ei löytynyt — Syke Parturi';
+const description = 'Etsimääsi sivua ei löytynyt. Siirry Syke Parturin etusivulle tai soita meille.';
+---
+<BaseLayout title={title} description={description} canonical="https://sykeparturi.datato.fi/404">
+  <main class="error-page" id="main"><p class="eyebrow">404 · Sivua ei löytynyt</p><h1 id="error-title">Hups, tämä sivu<br /><span>on hukassa.</span></h1><p>Sivua ei löytynyt. Palaa etusivulle tai soita meille.</p><div class="actions"><Button href="/">Etusivulle</Button><Button href="tel:+358503803388" variant="outline">Soita: 050 380 3388</Button></div></main>
+</BaseLayout>
+<style>
+  .error-page { display: flex; min-height: 100svh; align-items: flex-start; justify-content: center; flex-direction: column; padding: 2rem max(1.5rem, calc((100vw - 1160px) / 2)); background: radial-gradient(ellipse at 80% 20%, #1c3c30, transparent 52%), #0b1915; }
+  h1 { margin: 1rem 0; font-family: var(--font-display); font-size: clamp(3.5rem, 9vw, 7rem); line-height: 1; letter-spacing: -.06em; }
+  h1 span { color: var(--gold); }
+  p:not(.eyebrow) { margin-bottom: 2rem; color: #d2d1ca; }
+  .actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+</style>

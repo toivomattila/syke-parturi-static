@@ -1,0 +1,5 @@
+---
+interface Props extends astroHTML.JSX.AnchorHTMLAttributes { variant?: 'default' | 'outline'; }
+const { variant = 'default', class: className, ...props } = Astro.props;
+---
+<a class:list={['button', variant === 'outline' && 'button-outline', className]} {...props}><slot /></a>
