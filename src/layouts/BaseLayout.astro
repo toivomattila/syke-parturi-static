@@ -1,11 +1,10 @@
 ---
 import '../styles/global.css';
 import dmSansLatin from '@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2?url';
-import dmSansLatinExt from '@fontsource-variable/dm-sans/files/dm-sans-latin-ext-wght-normal.woff2?url';
 import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
-import manropeLatinExt from '@fontsource-variable/manrope/files/manrope-latin-ext-wght-normal.woff2?url';
-interface Props { title: string; description: string; canonical?: string; }
-const { title, description, canonical = 'https://sykeparturi.datato.fi/' } = Astro.props;
+interface Props { title: string; description: string; canonical?: string | false; noindex?: boolean; }
+const { title, description, canonical = 'https://sykeparturi.datato.fi/', noindex = false } = Astro.props;
+const canonicalUrl = canonical || 'https://sykeparturi.datato.fi/';
 const ogUrl = 'https://sykeparturi.datato.fi/og-image.png';
 ---
 <!doctype html>
@@ -15,7 +14,8 @@ const ogUrl = 'https://sykeparturi.datato.fi/og-image.png';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0b1915" />
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -24,16 +24,14 @@ const ogUrl = 'https://sykeparturi.datato.fi/og-image.png';
     <link rel="ai-catalog" href="/.well-known/ai-catalog.json" />
     <link rel="describedby" href="/llms.txt" type="text/markdown" />
     <link rel="preload" href={dmSansLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={dmSansLatinExt} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={manropeLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={manropeLatinExt} as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fi_FI" />
     <meta property="og:site_name" content="Syke Parturi" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />

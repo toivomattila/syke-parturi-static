@@ -4,7 +4,7 @@ import Button from '../components/ui/Button.astro';
 const title = 'Sivua ei löytynyt — Syke Parturi';
 const description = 'Etsimääsi sivua ei löytynyt. Siirry Syke Parturin etusivulle tai soita meille.';
 ---
-<BaseLayout title={title} description={description} canonical="https://sykeparturi.datato.fi/404">
+<BaseLayout title={title} description={description} canonical={false} noindex>
   <main class="error-page" id="main"><p class="eyebrow">404 · Sivua ei löytynyt</p><h1 id="error-title">Hups, tämä sivu<br /><span>on hukassa.</span></h1><p>Sivua ei löytynyt. Palaa etusivulle tai soita meille.</p><div class="actions"><Button href="/">Etusivulle</Button><Button href="tel:+358503803388" variant="outline">Soita: 050 380 3388</Button></div></main>
 </BaseLayout>
 <style>
