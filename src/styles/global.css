@@ -2,6 +2,24 @@
 @import "@fontsource-variable/dm-sans";
 @import "@fontsource-variable/manrope";
 
+@font-face {
+  font-family: "DM Sans Fallback";
+  src: local("Arial"), local("Arimo");
+  size-adjust: 95.4%;
+  ascent-override: 104%;
+  descent-override: 32.5%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Manrope Fallback";
+  src: local("Arial"), local("Arimo");
+  size-adjust: 102.2%;
+  ascent-override: 104.3%;
+  descent-override: 29.4%;
+  line-gap-override: 0%;
+}
+
 :root {
   color-scheme: dark;
   --ink: #f4f0e8;
@@ -14,8 +32,8 @@
 }
 
 @theme {
-  --font-sans: "DM Sans Variable", sans-serif;
-  --font-display: "Manrope Variable", sans-serif;
+  --font-sans: "DM Sans Variable", "DM Sans Fallback", Arial, sans-serif;
+  --font-display: "Manrope Variable", "Manrope Fallback", Arial, sans-serif;
 }
 
 * {

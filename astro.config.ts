@@ -7,7 +7,9 @@ export default defineConfig({
   output: "static",
   integrations: [
     sitemap({
-      filter: (page) => !page.endsWith("/.well-known/webmcp.json"),
+      filter: (page) =>
+        !page.endsWith("/.well-known/webmcp.json") &&
+        !page.endsWith("/.well-known/ai-catalog.json"),
     }),
   ],
   vite: { plugins: [tailwindcss()] },

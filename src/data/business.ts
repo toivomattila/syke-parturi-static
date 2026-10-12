@@ -38,3 +38,28 @@ export const webmcpTools = [
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
 ] as const;
+
+export const aiCatalog = {
+  specVersion: "1.0",
+  host: {
+    displayName: business.name,
+    documentationUrl: new URL("/llms.txt", business.url).href,
+  },
+  entries: [
+    {
+      identifier: "urn:air:datato.fi:business:syke-parturi-webmcp",
+      displayName: `${business.name} WebMCP-manifesti`,
+      type: "application/json",
+      url: new URL("/.well-known/webmcp.json", business.url).href,
+      description: "WebMCP-manifesti palveluiden, yhteystietojen ja reittiohjeen lukemiseen.",
+      representativeQueries: [
+        `Mitkä ovat ${business.name} palvelut ja hinnat?`,
+        `Missä ${business.name} sijaitsee ja miten sinne saa reittiohjeet?`,
+      ],
+      metadata: {
+        webmcpManifestUrl: new URL("/.well-known/webmcp.json", business.url).href,
+        llmsTxtUrl: new URL("/llms.txt", business.url).href,
+      },
+    },
+  ],
+} as const;
