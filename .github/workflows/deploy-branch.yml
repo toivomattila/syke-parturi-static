@@ -35,8 +35,7 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin main
-          git fetch origin deploy || true
-          deploy_sha="$(git rev-parse origin/deploy 2>/dev/null || true)"
+          deploy_sha="$(git ls-remote --heads origin deploy | awk '{print $1}')"
           if [ -n "$deploy_sha" ]; then
             if [ "$deploy_sha" = "$SOURCE_SHA" ]; then
               echo "deploy already at ${SOURCE_SHA}"
