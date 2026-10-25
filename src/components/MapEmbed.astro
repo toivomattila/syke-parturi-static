@@ -1,0 +1,127 @@
+---
+interface Props {
+  embedUrl: string;
+  title: string;
+}
+
+const { embedUrl, title } = Astro.props;
+---
+
+<div class="map-embed" data-map-embed data-embed-url={embedUrl} data-embed-title={title}>
+  <div class="map-facade" data-map-facade>
+    <div class="map-facade-pattern" aria-hidden="true"></div>
+    <p class="map-facade-text">Kartta ladataan vain napautuksella — Googlea ei haeta sivun avauksessa.</p>
+    <button type="button" class="map-load-button" data-map-load>
+      Näytä kartta
+    </button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll("[data-map-embed]").forEach((root) => {
+    const embedUrl = root.getAttribute("data-embed-url");
+    const title = root.getAttribute("data-embed-title");
+    if (!embedUrl || !title) return;
+    const button = root.querySelector("[data-map-load]");
+    button?.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.src = embedUrl;
+      iframe.title = title;
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "no-referrer-when-downgrade";
+      iframe.setAttribute("allowfullscreen", "");
+      iframe.setAttribute(
+        "allow",
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+      );
+      root.replaceChildren(iframe);
+    });
+  });
+</script>
+
+<style>
+  .map-embed {
+    width: 100%;
+    margin-top: 2.5rem;
+    border: 1px solid rgb(20 36 30 / 22%);
+    background: #c8c2b6;
+    overflow: hidden;
+  }
+  .map-facade {
+    display: flex;
+    min-height: 280px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .map-facade-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    background:
+      linear-gradient(0deg, rgb(255 255 255 / 40%), transparent 40%),
+      repeating-linear-gradient(
+        90deg,
+        rgb(20 36 30 / 8%) 0,
+        rgb(20 36 30 / 8%) 1px,
+        transparent 1px,
+        transparent 48px
+      ),
+      repeating-linear-gradient(
+        rgb(20 36 30 / 6%) 0,
+        rgb(20 36 30 / 6%) 1px,
+        transparent 1px,
+        transparent 48px
+      );
+    pointer-events: none;
+  }
+  .map-embed .map-facade {
+    position: relative;
+  }
+  .map-facade-text {
+    position: relative;
+    z-index: 1;
+    max-width: 28rem;
+    margin: 0;
+    color: #3d4f45;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .map-load-button {
+    position: relative;
+    z-index: 1;
+    min-height: 2.75rem;
+    padding: 0.65rem 1.35rem;
+    border: 1px solid #294b39;
+    background: #14241e;
+    color: #f4f0e8;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .map-load-button:hover {
+    border-color: #795c22;
+    background: #1e342b;
+  }
+  .map-embed iframe {
+    display: block;
+    width: 100%;
+    height: min(420px, 55vw);
+    min-height: 280px;
+    border: 0;
+  }
+  @media (max-width: 700px) {
+    .map-embed {
+      margin-top: 2rem;
+    }
+    .map-facade {
+      min-height: 240px;
+      padding: 1.5rem 1rem;
+    }
+  }
+</style>
