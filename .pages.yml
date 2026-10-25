@@ -106,4 +106,3 @@ content:
             label: Kuvateksti (valinnainen)
             type: string
             description: Kuvaus ruudunlukijoille. Tyhjä = yleinen kuvateksti.
-# webhook test
