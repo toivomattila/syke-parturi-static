@@ -4,7 +4,23 @@ import Button from '../components/ui/Button.astro';
 import Card from '../components/ui/Card.astro';
 import { Image } from 'astro:assets';
 import interior from '../assets/barbershop.png';
-import { business, openingHoursText } from '../data/business';
+import { business, businessSite, openingHoursText, webmcpTools } from '../data/business';
+
+const webmcpToolText = {
+  get_services_and_prices: business.services
+    .map((service) => `${service.name}: ${service.price} €`)
+    .join('\n'),
+  get_location_and_contact: [
+    business.name,
+    `${business.address.street}, ${business.address.postalCode} ${business.address.locality}`,
+    `Puhelin: ${business.phone.display}`,
+    `Y-tunnus: ${business.businessId}`,
+    openingHoursText,
+  ].join('\n'),
+  get_opening_hours: openingHoursText,
+  get_directions_link: business.directionsUrl,
+};
+
 const title = `${business.name} — Parturi Lahdessa`;
 const description = `${business.name} Lahdessa. ${business.services.map((service) => `${service.name} ${service.price} €`).join(' ja ')}. ${business.address.street}, ${business.address.postalCode} ${business.address.locality}.`;
 const offerCatalog = {
@@ -53,15 +69,15 @@ const structuredData = {
       <div class="hero-image" aria-hidden="true"><Image src={interior} alt="Syke Parturin viihtyisä ja huolella järjestetty parturiliike" width={1500} height={1000} widths={[600, 900, 1200, 1500]} sizes="100vw" format="webp" quality={72} loading="eager" fetchpriority="high" /></div>
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="container hero-content">
-        <p class="eyebrow">Parturi · Lahti</p>
-        <h1 id="hero-title">Hyvä tyyli.<br /><span>Hyvä syke.</span></h1>
-        <p class="hero-copy">Hiustenleikkaukset ja parran muotoilu Lahden keskustassa.</p>
+        <p class="eyebrow">{businessSite.tagline}</p>
+        <h1 id="hero-title">{businessSite.heroHeadingLine1}<br /><span>{businessSite.heroHeadingLine2}</span></h1>
+        <p class="hero-copy">{businessSite.intro}</p>
         <div class="hero-actions"><Button href={business.phone.href}>Soita: {business.phone.display} <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.58 2.8.7a2 2 0 0 1 1.73 2.03z"/></svg></Button><a class="text-link" href="#palvelut">Tutustu palveluihin <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14m-7-7 7 7 7-7"/></svg></a></div>
       </div>
     </section>
     <section class="section services" id="palvelut" aria-labelledby="services-title">
       <div class="container">
-        <div class="section-heading"><div><p class="eyebrow">Selkeät hinnat</p><h2 id="services-title">Palvelut <span>& hinnat</span></h2></div><p>Palvelut ja hinnat Kauppakadulla Lahdessa.</p></div>
+        <div class="section-heading"><div><p class="eyebrow">Selkeät hinnat</p><h2 id="services-title">Palvelut <span>& hinnat</span></h2></div><p>{businessSite.servicesIntro}</p></div>
         <div class="service-grid">
           {business.services.map((service) => (
             <Card class="service-card"><h3>{service.name}</h3><p class="service-price">{service.price} <span>€</span></p></Card>
@@ -81,8 +97,9 @@ const structuredData = {
     </section>
   </main>
   <footer class="site-footer"><div class="container footer-inner"><a class="brand" href="#alku"><span class="brand-mark" aria-hidden="true">S</span><span>SYKE <span class="brand-light">PARTURI</span></span></a><span>© {business.name} · {business.address.locality}</span><a class="back-top" href="#alku">Takaisin ylös ↑</a></div></footer>
-  <script>
-    import '../scripts/webmcp';
+  <script type="module" define:vars={{ webmcpToolText, webmcpTools }}>
+    import { initWebmcp } from '../scripts/webmcp-init';
+    initWebmcp(webmcpToolText, webmcpTools);
   </script>
 </BaseLayout>
 <style>
