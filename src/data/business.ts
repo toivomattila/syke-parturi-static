@@ -37,9 +37,9 @@ function directionsUrl(address: BusinessValues["address"]): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${encoded}`;
 }
 
-function mapsEmbedUrl(address: BusinessValues["address"]): string {
-  const query = encodeURIComponent(formatAddressLine(address));
-  return `https://www.google.com/maps?q=${query}&output=embed`;
+function mapsEmbedUrl(name: string, address: BusinessValues["address"]): string {
+  const query = encodeURIComponent(`${name}, ${formatAddressLine(address)}`);
+  return `https://www.google.com/maps?q=${query}&output=embed&z=16`;
 }
 
 const openingHours = businessValues.openingHours.map((hours) => {
@@ -75,7 +75,7 @@ export const business = {
   businessId: businessValues.businessId,
   openingHours,
   directionsUrl: directionsUrl(businessValues.address),
-  mapsEmbedUrl: mapsEmbedUrl(businessValues.address),
+  mapsEmbedUrl: mapsEmbedUrl(businessValues.name, businessValues.address),
   gallery: businessValues.gallery
     .map((item) => ({
       src: item.src,
