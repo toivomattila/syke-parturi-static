@@ -31,7 +31,9 @@ pnpm lhci
 `pnpm lhci` käyttää paikallista Chromea. CI tarkistaa muodostetut tiedostot lycheyllä offline-tilassa; ulkoisten linkkien toimivuutta ei tarkisteta.
 Lighthouse-asetukset määrittävät kategoria-assertiot URL-kohtaisesti: etusivun SEO-raja säilyy, mutta `404.html`-sivun SEO-assertio on pois käytöstä. 404-sivun `noindex` on tarkoituksellinen, koska OpenShip palvelee virheellisiä osoitteita soft-404-sivuina.
 
-WebMCP-skripti rekisteröi vain luku -työkalut sitä tukevassa selaimessa. Sivun ja `/.well-known/webmcp.json`-manifestin faktat käyttävät samaa `src/data/business.ts`-tietolähdettä.
+Muokattava sisältö on tiedostossa [`src/content/business.json`](src/content/business.json) ja validoidaan buildissa Zod-skeemalla (`src/data/business-values.ts`). Johdetut tiedot, JSON-LD ja WebMCP käyttävät [`src/data/business.ts`](src/data/business.ts).
+
+WebMCP-skripti rekisteröi vain luku -työkalut sitä tukevassa selaimessa. Sivun ja `/.well-known/webmcp.json`-manifestin faktat käyttävät samaa sisältölähdettä.
 
 OG-kuva, faviconit ja sovelluskuvakkeet voi luoda uudelleen komennolla `pnpm assets:generate`. Parturiliikkeen valokuva on tallennettu `src/assets`-hakemistoon ja optimoidaan Astro buildissa.
 
@@ -65,7 +67,9 @@ pnpm lhci
 
 `pnpm lint` runs Oxlint in type-aware mode for TypeScript files. Oxlint does not lint Astro `.astro` templates; `astro check` covers them as part of `pnpm check`. React Doctor runs non-interactively and offline; this project has no React components.
 
-The WebMCP script registers read-only tools in supporting browsers. The page and `/.well-known/webmcp.json` manifest use the same `src/data/business.ts` fact source.
+Editable content lives in [`src/content/business.json`](src/content/business.json) and is validated at build time with Zod (`src/data/business-values.ts`). Derived facts, JSON-LD, and WebMCP use [`src/data/business.ts`](src/data/business.ts).
+
+The WebMCP script registers read-only tools in supporting browsers. The page and `/.well-known/webmcp.json` manifest use the same content source.
 
 `pnpm shadcn:lint` runs `@shadcn/lint` through Oxlint and disallows arbitrary Tailwind values. The rule is configured in `.oxlint.shadcn.json`; choose additional rules from the [rule list](https://github.com/shadcn-ui/lint/blob/main/docs/rules.md). The plugin recognizes React JSX, Vue, and Svelte files, but not Astro templates. Oxlint checks supported `.ts` and `.tsx` files. This site has no TSX UI components; `Button.astro` and `Card.astro` are checked by Astro tooling, not this plugin. `pnpm lhci` uses a local Chrome installation. CI checks generated files with lychee in offline mode, so external link health is not checked. Regenerate the OG image, favicons, and app icons with `pnpm assets:generate`.
 

@@ -1,0 +1,44 @@
+{
+  "name": "Syke Parturi",
+  "tagline": "Parturi · Lahti",
+  "heroHeadingLine1": "Hyvä tyyli.",
+  "heroHeadingLine2": "Hyvä syke.",
+  "intro": "Hiustenleikkaukset ja parran muotoilu Lahden keskustassa.",
+  "servicesIntro": "Palvelut ja hinnat Kauppakadulla Lahdessa.",
+  "phone": "050 380 3388",
+  "businessId": "3593342-5",
+  "bookingLink": "",
+  "notice": "",
+  "address": {
+    "street": "Kauppakatu 18",
+    "postalCode": "15140",
+    "locality": "Lahti",
+    "country": "FI"
+  },
+  "openingHours": [
+    {
+      "days": "Ma–Pe",
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "days": "La",
+      "opens": "10:00",
+      "closes": "18:00"
+    }
+  ],
+  "services": [
+    {
+      "id": "haircut",
+      "name": "Hiustenleikkuu",
+      "price": 20,
+      "currency": "EUR"
+    },
+    {
+      "id": "beard",
+      "name": "Parranajo / parran muotoilu",
+      "price": 15,
+      "currency": "EUR"
+    }
+  ]
+}

@@ -1,6 +1,10 @@
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
+import rawBusiness from "./src/content/business.json";
+import { parseBusinessValues } from "./src/data/business-values";
+
+parseBusinessValues(rawBusiness);
 
 export default defineConfig({
   site: "https://sykeparturi.datato.fi",

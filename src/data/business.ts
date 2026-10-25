@@ -1,58 +1,120 @@
+import rawValues from "../content/business.json";
+import type { BusinessValues } from "./business-values";
+
+const businessValues = rawValues as BusinessValues;
+
+const SITE_URL = "https://sykeparturi.datato.fi/";
+
+const schemaDaysByLabel: Record<string, readonly string[]> = {
+  "Ma–Pe": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+  La: ["Saturday"],
+};
+
+function phoneDigits(display: string): string {
+  return display.replace(/\s/g, "");
+}
+
+function phoneHref(display: string): string {
+  const digits = phoneDigits(display);
+  if (digits.startsWith("+")) return `tel:${digits}`;
+  if (digits.startsWith("0")) return `tel:+358${digits.slice(1)}`;
+  return `tel:+${digits}`;
+}
+
+function phoneInternational(display: string): string {
+  const digits = phoneDigits(display);
+  if (digits.startsWith("+")) return digits;
+  if (digits.startsWith("0")) return `+358${digits.slice(1)}`;
+  return `+${digits}`;
+}
+
+function directionsUrl(address: BusinessValues["address"]): string {
+  const destination = `${address.street}, ${address.postalCode} ${address.locality}`;
+  const encoded = destination.replace(/, /g, "%2C+").replace(/ /g, "+");
+  return `https://www.google.com/maps/dir/?api=1&destination=${encoded}`;
+}
+
+const openingHours = businessValues.openingHours.map((hours) => {
+  const schemaDays = schemaDaysByLabel[hours.days];
+  if (!schemaDays) {
+    throw new Error(
+      `Invalid src/content/business.json: openingHours.days "${hours.days}" has no schema.org mapping`,
+    );
+  }
+  return { ...hours, schemaDays };
+});
+
+/** Marketing copy and optional CMS fields (not bundled into the WebMCP client script). */
+export const businessSite = {
+  tagline: businessValues.tagline,
+  heroHeadingLine1: businessValues.heroHeadingLine1,
+  heroHeadingLine2: businessValues.heroHeadingLine2,
+  intro: businessValues.intro,
+  servicesIntro: businessValues.servicesIntro,
+  bookingLink: businessValues.bookingLink,
+  notice: businessValues.notice,
+};
+
 export const business = {
-  name: "Syke Parturi",
-  url: "https://sykeparturi.datato.fi/",
-  address: {
-    street: "Kauppakatu 18",
-    postalCode: "15140",
-    locality: "Lahti",
-    country: "FI",
-  },
+  name: businessValues.name,
+  url: SITE_URL,
+  address: businessValues.address,
   phone: {
-    display: "050 380 3388",
-    href: "tel:+358503803388",
-    international: "+358503803388",
+    display: businessValues.phone,
+    href: phoneHref(businessValues.phone),
+    international: phoneInternational(businessValues.phone),
   },
-  businessId: "3593342-5",
-  openingHours: [
-    {
-      days: "Ma–Pe",
-      schemaDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      opens: "10:00",
-      closes: "19:00",
-    },
-    { days: "La", schemaDays: ["Saturday"], opens: "10:00", closes: "18:00" },
-  ],
-  directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=Kauppakatu+18%2C+15140+Lahti",
-  services: [
-    { name: "Hiustenleikkuu", price: 20, currency: "EUR" },
-    { name: "Parranajo / parran muotoilu", price: 15, currency: "EUR" },
-  ],
-} as const;
+  businessId: businessValues.businessId,
+  openingHours,
+  directionsUrl: directionsUrl(businessValues.address),
+  services: businessValues.services.map(({ name, price, currency }) => ({
+    name,
+    price,
+    currency,
+  })),
+};
 
 export const openingHoursText = `Aukioloajat: ${business.openingHours.map((hours) => `${hours.days} ${hours.opens.slice(0, 5)}–${hours.closes.slice(0, 5)}`).join(", ")}, Su suljettu`;
 
-export const webmcpTools = [
-  {
-    name: "get_services_and_prices",
-    description: "Hakee Syke Parturin palvelut ja hinnat.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
-  },
-  {
-    name: "get_location_and_contact",
-    description: "Hakee Syke Parturin osoitteen, puhelinnumeron, Y-tunnuksen ja aukioloaikatiedon.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
-  },
-  {
-    name: "get_opening_hours",
-    description: "Hakee Syke Parturin aukioloajat.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
-  },
-  {
-    name: "get_directions_link",
-    description: "Hakee Google Maps -reittiohjelinkin Syke Parturiin.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
-  },
-] as const;
+function serviceLlmsLabel(service: { id: string; name: string; price: number }): string {
+  if (service.id === "beard") return `parranajo / parran muotoilu ${service.price} €`;
+  return `${service.name} ${service.price} €`;
+}
+
+export function buildLlmsTxt(): string {
+  const servicesLine = businessValues.services.map(serviceLlmsLabel).join("; ");
+  const hoursShort = business.openingHours
+    .map(
+      (hours) =>
+        `${hours.days} ${hours.opens.slice(0, 5).replace(":00", "")}–${hours.closes.slice(0, 5).replace(":00", "")}`,
+    )
+    .join(", ");
+  const addressLine = `${business.address.street}, ${business.address.postalCode} ${business.address.locality}`;
+
+  return `# ${business.name}
+
+> ${business.name} on parturi Lahdessa. Palvelut ovat hiustenleikkuu sekä parranajo tai parran muotoilu.
+
+## Palvelut ja hinnat
+
+- [Palvelut](${business.url}#palvelut): ${servicesLine}.
+
+## Yhteystiedot
+
+- [Yhteystiedot](${business.url}#yhteystiedot): ${addressLine}; puhelin ${business.phone.display}; Y-tunnus ${business.businessId}; aukioloajat: ${hoursShort}, Su suljettu.
+
+## Reittiohjeet
+
+- [Avaa reittiohjeet](${business.directionsUrl}): ${addressLine}.
+
+## Koneellisesti luettavat tiedot
+
+- [WebMCP-manifesti](${business.url}.well-known/webmcp.json): ${business.name}n palvelut, yhteystiedot ja reittiohje.
+- [AI Catalog](${business.url}.well-known/ai-catalog.json): ${business.name}n WebMCP-manifesti ja tiedot.
+`;
+}
+
+export { webmcpTools } from "./webmcp-tools";
 
 export const aiCatalog = {
   specVersion: "1.0",

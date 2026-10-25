@@ -26,6 +26,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.17
         version: 4.3.3
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.4
@@ -2838,8 +2841,8 @@ packages:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
 
-  legacy-javascript@0.0.3:
-    resolution: {integrity: sha512-1r6MT4dVaJyXt4G07Cm2cQ0AUaLJdefiEp4SmIAylA++gnEQ82YvmzE58RkM5EP0fk5hROLCslUPGnwIYdZQVA==}
+  legacy-javascript@0.0.4:
+    resolution: {integrity: sha512-UTmeKBVxnfJcpmpOvzzNnLsQT99BXHpPlc/ZKddIRmWmrR0fw6335I3lq4+sJoP60UTbBNaYsGYVPc65YB1x3A==}
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -5357,7 +5360,7 @@ snapshots:
 
   '@paulirish/trace_engine@0.0.53':
     dependencies:
-      legacy-javascript: 0.0.3
+      legacy-javascript: 0.0.4
       third-party-web: 0.30.0
 
   '@puppeteer/browsers@2.13.2':
@@ -6888,7 +6891,7 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  legacy-javascript@0.0.3: {}
+  legacy-javascript@0.0.4: {}
 
   levn@0.4.1:
     dependencies:
