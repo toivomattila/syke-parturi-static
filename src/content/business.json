@@ -41,10 +41,5 @@
       "currency": "EUR"
     }
   ],
-  "gallery": [
-    {
-      "src": "/images/gallery/cms-gallery-test.jpg",
-      "alt": "CMS-gallerian testikuva"
-    }
-  ]
+  "gallery": []
 }
