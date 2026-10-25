@@ -1,0 +1,87 @@
+content:
+  - name: business
+    label: Sivuston sisältö
+    type: file
+    path: src/content/business.json
+    fields:
+      - name: name
+        label: Yrityksen nimi
+        type: string
+      - name: tagline
+        label: Yläotsikko (hero)
+        type: string
+      - name: heroHeadingLine1
+        label: Pääotsikko, rivi 1
+        type: string
+      - name: heroHeadingLine2
+        label: Pääotsikko, rivi 2 (korostus)
+        type: string
+      - name: intro
+        label: Esittelyteksti (hero)
+        type: text
+      - name: servicesIntro
+        label: Palveluosion kuvaus
+        type: text
+      - name: phone
+        label: Puhelin (näyttömuoto)
+        type: string
+      - name: businessId
+        label: Y-tunnus
+        type: string
+      - name: bookingLink
+        label: Ajanvarauslinkki
+        type: string
+        description: Valinnainen. Tyhjä = ei erillistä linkkiä sivulla.
+      - name: notice
+        label: Huomautus (esim. poikkeava aukiolo)
+        type: text
+        description: Valinnainen. Näytetään kun täytetty (tulossa).
+      - name: address
+        label: Osoite
+        type: object
+        fields:
+          - name: street
+            label: Katuosoite
+            type: string
+          - name: postalCode
+            label: Postinumero
+            type: string
+          - name: locality
+            label: Postitoimipaikka
+            type: string
+          - name: country
+            label: Maa (ISO)
+            type: string
+      - name: openingHours
+        label: Aukioloajat
+        type: object
+        list: true
+        fields:
+          - name: days
+            label: Päivät (esim. Ma–Pe)
+            type: string
+          - name: opens
+            label: Avautuu (HH:MM)
+            type: string
+          - name: closes
+            label: Sulkeutuu (HH:MM)
+            type: string
+      - name: services
+        label: Palvelut ja hinnat
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: Tunniste
+            type: string
+            description: Lyhyt tekninen tunnus (esim. haircut). Älä vaihda ilman syytä.
+          - name: name
+            label: Palvelun nimi
+            type: string
+          - name: price
+            label: Hinta (€)
+            type: number
+          - name: currency
+            label: Valuutta
+            type: string
+            description: Käytä EUR.

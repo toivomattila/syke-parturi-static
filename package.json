@@ -10,6 +10,7 @@
     "lint": "oxlint --type-aware --tsconfig tsconfig.json",
     "shadcn:lint": "oxlint --config .oxlint.shadcn.json --type-aware --tsconfig tsconfig.json src",
     "validate:content": "node --experimental-strip-types scripts/validate-content.mjs",
+    "output:check": "node scripts/check-output.mjs",
     "check": "pnpm validate:content && astro check && tsc --noEmit",
     "build": "astro build",
     "assets:generate": "node scripts/generate-assets.mjs",

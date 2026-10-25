@@ -21,6 +21,7 @@ jobs:
       - run: pnpm check
       - run: pnpm doctor
       - run: pnpm build
+      - run: pnpm output:check
       - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
         with:
           args: --config lychee.toml dist
