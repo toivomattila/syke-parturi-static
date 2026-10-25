@@ -34,7 +34,8 @@ jobs:
           SOURCE_SHA: ${{ env.SOURCE_SHA }}
         run: |
           set -euo pipefail
-          git fetch origin deploy main
+          git fetch origin main
+          git fetch origin deploy || true
           deploy_sha="$(git rev-parse origin/deploy 2>/dev/null || true)"
           if [ -n "$deploy_sha" ]; then
             if [ "$deploy_sha" = "$SOURCE_SHA" ]; then
