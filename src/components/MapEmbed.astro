@@ -20,25 +20,27 @@ const { embedUrl, title } = Astro.props;
 
 <style>
   .map-embed {
+    position: relative;
     width: 100%;
     margin-top: 2.5rem;
+    aspect-ratio: 16 / 10;
     border: 1px solid rgb(20 36 30 / 22%);
     background: #c8c2b6;
     overflow: hidden;
   }
   .map-embed iframe {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
-    height: min(420px, 55vw);
-    min-height: 280px;
+    height: 100%;
     border: 0;
   }
   @media (max-width: 700px) {
     .map-embed {
       margin-top: 2rem;
-    }
-    .map-embed iframe {
-      min-height: 240px;
+      aspect-ratio: auto;
+      height: clamp(300px, 88vw, 360px);
     }
   }
 </style>
