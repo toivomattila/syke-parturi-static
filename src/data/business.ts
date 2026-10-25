@@ -28,10 +28,18 @@ function phoneInternational(display: string): string {
   return `+${digits}`;
 }
 
+function formatAddressLine(address: BusinessValues["address"]): string {
+  return `${address.street}, ${address.postalCode} ${address.locality}`;
+}
+
 function directionsUrl(address: BusinessValues["address"]): string {
-  const destination = `${address.street}, ${address.postalCode} ${address.locality}`;
-  const encoded = destination.replace(/, /g, "%2C+").replace(/ /g, "+");
+  const encoded = formatAddressLine(address).replace(/, /g, "%2C+").replace(/ /g, "+");
   return `https://www.google.com/maps/dir/?api=1&destination=${encoded}`;
+}
+
+function mapsEmbedUrl(address: BusinessValues["address"]): string {
+  const query = encodeURIComponent(formatAddressLine(address));
+  return `https://www.google.com/maps?q=${query}&output=embed`;
 }
 
 const openingHours = businessValues.openingHours.map((hours) => {
@@ -67,6 +75,13 @@ export const business = {
   businessId: businessValues.businessId,
   openingHours,
   directionsUrl: directionsUrl(businessValues.address),
+  mapsEmbedUrl: mapsEmbedUrl(businessValues.address),
+  gallery: businessValues.gallery
+    .map((item) => ({
+      src: item.src,
+      alt: item.alt?.trim() ?? "",
+    }))
+    .filter((item) => item.src.length > 0),
   services: businessValues.services.map(({ name, price, currency }) => ({
     name,
     price,

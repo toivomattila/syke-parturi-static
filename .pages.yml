@@ -1,3 +1,9 @@
+media:
+  input: public/images/gallery
+  output: /images/gallery
+  categories: [image]
+  extensions: [jpg, jpeg, png, webp]
+
 content:
   - name: business
     label: Sivuston sisältö
@@ -85,3 +91,18 @@ content:
             label: Valuutta
             type: string
             description: Käytä EUR.
+      - name: gallery
+        label: Kuvagalleria
+        type: object
+        list: true
+        description: Valinnainen. Tyhjä lista = galleriaosio piilotettu sivulta.
+        fields:
+          - name: src
+            label: Kuva
+            type: image
+            options:
+              path: public/images/gallery
+          - name: alt
+            label: Kuvateksti (valinnainen)
+            type: string
+            description: Kuvaus ruudunlukijoille. Tyhjä = yleinen kuvateksti.

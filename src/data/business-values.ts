@@ -20,6 +20,11 @@ const serviceSchema = z.object({
   currency: z.literal("EUR"),
 });
 
+const galleryItemSchema = z.object({
+  src: z.string().min(1),
+  alt: z.string().optional(),
+});
+
 export const businessValuesSchema = z.object({
   name: z.string().min(1),
   tagline: z.string().min(1),
@@ -34,6 +39,7 @@ export const businessValuesSchema = z.object({
   address: addressSchema,
   openingHours: z.array(openingHoursSchema).min(1),
   services: z.array(serviceSchema).min(1),
+  gallery: z.array(galleryItemSchema).default([]),
 });
 
 export type BusinessValues = z.infer<typeof businessValuesSchema>;

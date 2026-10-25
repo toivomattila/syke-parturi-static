@@ -1,0 +1,212 @@
+---
+export interface GalleryItem {
+  src: string;
+  alt: string;
+}
+
+interface Props {
+  items: GalleryItem[];
+  businessName: string;
+}
+
+const { items, businessName } = Astro.props;
+const defaultAlt = `${businessName} – kuva`;
+---
+
+<section
+  class="section gallery"
+  id="galleria"
+  aria-labelledby="gallery-title"
+  data-gallery-items={JSON.stringify(items)}
+  data-gallery-default-alt={defaultAlt}
+>
+  <div class="container">
+    <div class="section-heading gallery-heading">
+      <div>
+        <p class="eyebrow">Liike</p>
+        <h2 id="gallery-title">Kuvagalleria</h2>
+      </div>
+      <p>Kuvia parturiliikkeestämme Kauppakadulla.</p>
+    </div>
+    <ul class="gallery-grid" role="list">
+      {items.map((item, index) => {
+        const alt = item.alt || defaultAlt;
+        return (
+          <li>
+            <button
+              type="button"
+              class="gallery-thumb"
+              data-gallery-open={index}
+              aria-label={`Avaa kuva: ${alt}`}
+            >
+              <img src={item.src} alt={alt} loading="lazy" decoding="async" width="640" height="480" />
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+
+<dialog class="gallery-lightbox" data-gallery-dialog aria-label="Kuvagalleria">
+  <button type="button" class="gallery-close" data-gallery-close aria-label="Sulje kuva">
+    Sulje
+  </button>
+  <figure class="gallery-lightbox-figure">
+    <img data-gallery-lightbox-img alt="" decoding="async" />
+    <figcaption data-gallery-lightbox-caption hidden></figcaption>
+  </figure>
+  <div class="gallery-nav">
+    <button type="button" data-gallery-prev aria-label="Edellinen kuva">Edellinen</button>
+    <button type="button" data-gallery-next aria-label="Seuraava kuva">Seuraava</button>
+  </div>
+</dialog>
+
+<script>
+  const section = document.querySelector("[data-gallery-items]");
+  const items = section
+    ? (JSON.parse(section.getAttribute("data-gallery-items") ?? "[]") as { src: string; alt: string }[])
+    : [];
+  const defaultAlt = section?.getAttribute("data-gallery-default-alt") ?? "";
+  const dialog = document.querySelector<HTMLDialogElement>("[data-gallery-dialog]");
+  const img = dialog?.querySelector<HTMLImageElement>("[data-gallery-lightbox-img]");
+  const caption = dialog?.querySelector<HTMLElement>("[data-gallery-lightbox-caption]");
+  let current = 0;
+
+  function showAt(index: number) {
+    if (!dialog || !img || !caption || items.length === 0) return;
+    current = (index + items.length) % items.length;
+    const item = items[current];
+    const alt = item.alt || defaultAlt;
+    img.src = item.src;
+    img.alt = alt;
+    if (item.alt) {
+      caption.textContent = item.alt;
+      caption.hidden = false;
+    } else {
+      caption.textContent = "";
+      caption.hidden = true;
+    }
+  }
+
+  document.querySelectorAll("[data-gallery-open]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const index = Number(button.getAttribute("data-gallery-open"));
+      showAt(index);
+      dialog?.showModal();
+    });
+  });
+
+  dialog?.querySelector("[data-gallery-close]")?.addEventListener("click", () => dialog.close());
+  dialog?.querySelector("[data-gallery-prev]")?.addEventListener("click", () => showAt(current - 1));
+  dialog?.querySelector("[data-gallery-next]")?.addEventListener("click", () => showAt(current + 1));
+
+  dialog?.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+
+  dialog?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    dialog.close();
+  });
+</script>
+
+<style>
+  .gallery {
+    background: #0f211b;
+    padding-block: 5rem;
+  }
+  .gallery-heading {
+    margin-bottom: 2rem;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .gallery-thumb {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--line);
+    background: rgb(255 255 255 / 3%);
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .gallery-thumb:hover {
+    border-color: rgb(213 172 112 / 55%);
+    transform: translateY(-2px);
+  }
+  .gallery-thumb img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .gallery-lightbox {
+    width: min(960px, calc(100% - 2rem));
+    max-width: none;
+    padding: 0;
+    border: 1px solid var(--line);
+    background: #08130f;
+    color: var(--ink);
+  }
+  .gallery-lightbox::backdrop {
+    background: rgb(8 19 15 / 85%);
+  }
+  .gallery-close {
+    position: absolute;
+    z-index: 2;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--line);
+    background: rgb(8 19 15 / 90%);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .gallery-lightbox-figure {
+    margin: 0;
+  }
+  .gallery-lightbox-figure img {
+    display: block;
+    width: 100%;
+    max-height: min(75vh, 720px);
+    object-fit: contain;
+    background: #0b1915;
+  }
+  .gallery-lightbox-figure figcaption {
+    padding: 0.85rem 1rem 1rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .gallery-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0 1rem 1rem;
+  }
+  .gallery-nav button {
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .gallery-nav button:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  @media (max-width: 700px) {
+    .gallery {
+      padding-block: 3.5rem;
+    }
+  }
+</style>
