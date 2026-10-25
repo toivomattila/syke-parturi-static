@@ -1,0 +1,57 @@
+name: Deploy branch
+
+# After CI passes on main, move the `deploy` branch to the tested commit so
+# Cloudflare Pages (or similar) only builds what already passed checks.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-branch-${{ github.event.workflow_run.head_sha || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+
+      - name: Update deploy branch
+        env:
+          SOURCE_SHA: ${{ env.SOURCE_SHA }}
+        run: |
+          set -euo pipefail
+          git fetch origin deploy main
+          deploy_sha="$(git rev-parse origin/deploy 2>/dev/null || true)"
+          if [ -n "$deploy_sha" ]; then
+            if [ "$deploy_sha" = "$SOURCE_SHA" ]; then
+              echo "deploy already at ${SOURCE_SHA}"
+              exit 0
+            fi
+            if git merge-base --is-ancestor "$SOURCE_SHA" "$deploy_sha"; then
+              echo "deploy (${deploy_sha}) is newer than tested ${SOURCE_SHA}; skipping"
+              exit 0
+            fi
+          fi
+          if ! git merge-base --is-ancestor "$SOURCE_SHA" origin/main; then
+            echo "${SOURCE_SHA} is not on main; skipping"
+            exit 0
+          fi
+          if [ -z "$deploy_sha" ]; then
+            git push origin "HEAD:refs/heads/deploy"
+          else
+            git push origin "HEAD:refs/heads/deploy" --force-with-lease=refs/heads/deploy:"$deploy_sha"
+          fi
