@@ -1,4 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 
 const indexPath = "dist/index.html";
 if (!existsSync(indexPath)) {
@@ -51,6 +52,42 @@ const requiredDist = [
 ];
 for (const f of requiredDist) {
   if (!existsSync(f)) fail(`Missing ${f}`);
+}
+
+if (/<script[^>]+src="[^"]*\.ts"/i.test(html)) {
+  fail("index.html references an unbundled .ts script");
+}
+
+const moduleScripts = [...html.matchAll(/<script type="module" src="(\/_astro\/[^"]+\.js)"/g)];
+if (moduleScripts.length === 0) {
+  fail("index.html has no bundled Astro client module scripts");
+}
+
+let webmcpBundled = false;
+for (const [, scriptPath] of moduleScripts) {
+  const jsPath = join("dist", scriptPath.slice(1));
+  if (!existsSync(jsPath)) {
+    fail(`Missing bundled script ${jsPath}`);
+    continue;
+  }
+  const js = readFileSync(jsPath, "utf8");
+  if (js.includes("webmcp-payload") && js.includes("registerTool")) {
+    webmcpBundled = true;
+  }
+}
+if (!webmcpBundled) {
+  fail("WebMCP bootstrap bundle not found (expected registerTool + webmcp-payload)");
+}
+
+const astroDir = "dist/_astro";
+if (existsSync(astroDir)) {
+  for (const file of readdirSync(astroDir)) {
+    if (!file.endsWith(".css")) continue;
+    const css = readFileSync(join(astroDir, file), "utf8");
+    if (/data:font/i.test(css)) {
+      fail(`${join(astroDir, file)} contains inlined data:font URL`);
+    }
+  }
 }
 
 if (failed) process.exit(1);
