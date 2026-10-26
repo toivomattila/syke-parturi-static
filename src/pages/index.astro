@@ -113,13 +113,13 @@ const structuredData = {
   </main>
   <footer class="site-footer"><div class="container footer-inner"><a class="brand" href="#alku"><span class="brand-mark" aria-hidden="true">S</span><span>SYKE <span class="brand-light">PARTURI</span></span></a><span>© {business.name} · {business.address.locality}</span><a class="back-top" href="#alku">Takaisin ylös ↑</a></div></footer>
   <script type="application/json" id="webmcp-payload" set:html={JSON.stringify({ toolText: webmcpToolText, tools: webmcpTools })} />
-  <script type="module" src="../scripts/webmcp-bootstrap.ts"></script>
+  <script src="../scripts/webmcp-bootstrap.ts"></script>
 </BaseLayout>
 <style>
   .site-header { position: absolute; z-index: 2; top: 0; left: 0; width: 100%; border-bottom: 1px solid rgb(255 255 255 / 10%); }
   .header-inner,.site-header nav,.brand,.footer-inner { display: flex; align-items: center; }
   .header-inner { min-height: 82px; justify-content: space-between; }
-  .brand { gap: .75rem; font-family: var(--font-display); font-size: .88rem; font-weight: 800; letter-spacing: .12em; text-decoration: none; }
+  .brand { display: inline-flex; align-items: center; gap: .75rem; min-height: 2.75rem; padding-block: .35rem; font-family: var(--font-display); font-size: .88rem; font-weight: 800; letter-spacing: .12em; text-decoration: none; }
   .brand-mark { display: grid; width: 2rem; height: 2rem; place-items: center; border: 1px solid var(--gold); color: var(--gold); font-family: var(--font-display); font-size: 1rem; }
   .brand-light { color: var(--muted); font-weight: 400; }
   .site-header nav { gap: 2.25rem; font-size: .88rem; }
@@ -161,7 +161,7 @@ const structuredData = {
   .detail { display: flex; flex-direction: column; align-items: start; }
   .detail-label { margin-bottom: .65rem; color: #35473d; font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
   address,.business-id p,.phone-link { margin: 0; font-size: 1.1rem; font-style: normal; line-height: 1.6; }
-  .phone-link { font-size: 1.45rem; font-weight: 650; text-decoration: none; }
+  .phone-link { display: inline-flex; align-items: center; min-height: 2.75rem; padding-block: .35rem; font-size: 1.45rem; font-weight: 650; text-decoration: none; }
   .detail-link { display: inline-flex; align-items: center; gap: .25rem; min-height: 2.75rem; margin-top: .5rem; padding-block: .35rem; color: #294b39; font-size: .95rem; text-underline-offset: 4px; }
   .business-id { grid-column: 1 / -1; padding-top: .8rem; border-top: 1px solid rgb(20 36 30 / 18%); }
   .site-footer { background: #08130f; }

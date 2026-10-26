@@ -16,5 +16,8 @@ export default defineConfig({
         !page.endsWith("/.well-known/ai-catalog.json"),
     }),
   ],
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+    build: { assetsInlineLimit: 0 },
+  },
 });
