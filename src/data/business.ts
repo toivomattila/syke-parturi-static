@@ -37,8 +37,23 @@ function directionsUrl(address: BusinessValues["address"]): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${encoded}`;
 }
 
+/** Kauppakatu 18, 15140 Lahti — OpenStreetMap Nominatim (Kauppakeskus Syke). */
+const BUSINESS_GEO = {
+  latitude: 60.9871887,
+  longitude: 25.6646612,
+} as const;
+
+function mapsSearchQuery(name: string, address: BusinessValues["address"]): string {
+  return `${name}, ${formatAddressLine(address)}`;
+}
+
+function mapsPlaceUrl(name: string, address: BusinessValues["address"]): string {
+  const query = encodeURIComponent(mapsSearchQuery(name, address));
+  return `https://www.google.com/maps?q=${query}`;
+}
+
 function mapsEmbedUrl(name: string, address: BusinessValues["address"]): string {
-  const query = encodeURIComponent(`${name}, ${formatAddressLine(address)}`);
+  const query = encodeURIComponent(mapsSearchQuery(name, address));
   return `https://www.google.com/maps?q=${query}&output=embed&z=16`;
 }
 
@@ -75,7 +90,9 @@ export const business = {
   businessId: businessValues.businessId,
   openingHours,
   directionsUrl: directionsUrl(businessValues.address),
+  mapsPlaceUrl: mapsPlaceUrl(businessValues.name, businessValues.address),
   mapsEmbedUrl: mapsEmbedUrl(businessValues.name, businessValues.address),
+  geo: BUSINESS_GEO,
   gallery: businessValues.gallery
     .map((item) => ({
       src: item.src,

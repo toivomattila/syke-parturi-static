@@ -1,0 +1,8 @@
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'; upgrade-insecure-requests
