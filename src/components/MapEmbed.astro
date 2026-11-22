@@ -1,4 +1,6 @@
 ---
+// E2/G5 (WORLD-CLASS.md, 22.11.2026): no third-party request before user action.
+// The Google Maps iframe (and the fonts/scripts it pulls in) loads only after a tap.
 interface Props {
   embedUrl: string;
   title: string;
@@ -7,16 +9,30 @@ interface Props {
 const { embedUrl, title } = Astro.props;
 ---
 
-<div class="map-embed">
-  <iframe
-    src={embedUrl}
-    title={title}
-    loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade"
-    allowfullscreen
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  ></iframe>
+<div class="map-embed" data-map-embed data-embed-url={embedUrl} data-embed-title={title}>
+  <div class="map-facade">
+    <div class="map-facade-pattern" aria-hidden="true"></div>
+    <p class="map-facade-text">Kartta ladataan Google Mapsista vasta, kun napautat.</p>
+    <button type="button" class="map-load-button" data-map-load>Avaa kartalla</button>
+  </div>
 </div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-map-embed]").forEach((root) => {
+    const embedUrl = root.dataset.embedUrl;
+    const title = root.dataset.embedTitle;
+    if (!embedUrl || !title) return;
+    root.querySelector("[data-map-load]")?.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.src = embedUrl;
+      iframe.title = title;
+      iframe.referrerPolicy = "no-referrer-when-downgrade";
+      iframe.setAttribute("allowfullscreen", "");
+      root.replaceChildren(iframe);
+      iframe.focus();
+    });
+  });
+</script>
 
 <style>
   .map-embed {
@@ -27,6 +43,48 @@ const { embedUrl, title } = Astro.props;
     border: 1px solid rgb(20 36 30 / 22%);
     background: #c8c2b6;
     overflow: hidden;
+  }
+  .map-facade {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .map-facade-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    background:
+      repeating-linear-gradient(90deg, rgb(20 36 30 / 8%) 0, rgb(20 36 30 / 8%) 1px, transparent 1px, transparent 48px),
+      repeating-linear-gradient(rgb(20 36 30 / 6%) 0, rgb(20 36 30 / 6%) 1px, transparent 1px, transparent 48px);
+    pointer-events: none;
+  }
+  .map-facade-text {
+    position: relative;
+    margin: 0;
+    color: #2f3f37;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .map-load-button {
+    position: relative;
+    min-height: 2.75rem;
+    padding: 0.65rem 1.35rem;
+    border: 1px solid #294b39;
+    background: #14241e;
+    color: #f4f0e8;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .map-load-button:hover,
+  .map-load-button:focus-visible {
+    background: #1e342b;
   }
   .map-embed iframe {
     position: absolute;
